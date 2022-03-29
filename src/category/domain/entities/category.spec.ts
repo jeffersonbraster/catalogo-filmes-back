@@ -3,12 +3,17 @@ import { omit } from "lodash";
 import UniqueEntityId from "../../../@seedwork/domain/value-objects/unique-entity-id";
 
 describe("Category tests", () => {
-  it("constructor of category", () => {
+  beforeEach(() => {
+    Category.validate = jest.fn()
+  })
+  it("constructor of category", () => {    
     let movie = new Category({
       name: "movie",
     });
 
     let data = omit(movie.props, "created_at");
+
+    expect(Category.validate).toHaveBeenCalled()
 
     expect(data).toStrictEqual({
       name: "movie",
@@ -61,6 +66,15 @@ describe("Category tests", () => {
     expect(category.description).toBe("setter description");
   });
 
+  it('should update a category', () => {
+    const category = new Category({name: 'movie'})
+    category.update('documentary', 'some description');
+    expect(Category.validate).toHaveBeenCalledTimes(2)
+
+    expect(category.name).toBe('documentary')
+    expect(category.description).toBe('some description')
+  })
+
   it("should active a category", () => {
     const category = new Category({
       name: 'Filmes',
@@ -72,7 +86,7 @@ describe("Category tests", () => {
 
   })
 
-  it("should active a category", () => {
+  it("should deactive a category", () => {
     const category = new Category({
       name: 'Filmes',
       is_active: true
