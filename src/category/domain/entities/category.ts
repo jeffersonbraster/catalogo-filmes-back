@@ -16,12 +16,29 @@ export default class Category extends Entity<CategoryProperties> {
     this.props.created_at = this.props.created_at ?? new Date();
   }
 
+  update(name: string, description: string): void {
+    this.name = name;
+    this.description = description;
+  }
+
+  activate() {
+    this.props.is_active = true;
+  }
+
+  deactivate() {
+    this.props.is_active = false;
+  }
+
   get name() {
     return this.props.name;
   }
 
   get description() {
     return this.props.description;
+  }
+
+  private set name(value: string) {
+    this.props.name = value ?? null;
   }
 
   private set description(value: string) {
