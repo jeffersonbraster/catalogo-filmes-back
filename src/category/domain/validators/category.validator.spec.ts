@@ -5,36 +5,33 @@ describe('categoryValidator Tests', () => {
 
   beforeEach(() => validator = CategoryValidatorFactory.create())
   it('invalidation cases for name filed', () => {
-    let isValid = validator.validate(null)
+    
+    expect({validator, data: {name: null}}).containsErrorMessages({
+      name: [
+        'name should not be empty',
+       'name must be a string',
+       'name must be shorter than or equal to 150 characters'
+      ]
+    })
 
-    expect(isValid).toBeFalsy();
-    expect(validator.errors['name']).toStrictEqual([
-      'name should not be empty',
-      'name must be a string',
-      'name must be shorter than or equal to 150 characters'
-    ])
+    expect({validator, data: {name: ''}}).containsErrorMessages({
+      name: [
+        'name should not be empty',
+      ]
+    })
 
-    isValid = validator.validate({name: ''})
+    expect({validator, data: {name: 5 as any}}).containsErrorMessages({
+      name: [
+        'name must be a string',
+       'name must be shorter than or equal to 150 characters'
+      ]
+    })
 
-    expect(isValid).toBeFalsy();
-    expect(validator.errors['name']).toStrictEqual([
-      'name should not be empty',
-    ])
-
-    isValid = validator.validate({name: 5 as any})
-
-    expect(isValid).toBeFalsy();
-    expect(validator.errors['name']).toStrictEqual([
-      'name must be a string',
-      'name must be shorter than or equal to 150 characters'
-    ])
-
-    isValid = validator.validate({name: 't'.repeat(200)})
-
-    expect(isValid).toBeFalsy();
-    expect(validator.errors['name']).toStrictEqual([
-      'name must be shorter than or equal to 150 characters'
-    ])
+    expect({validator, data: {name: 't'.repeat(200)}}).containsErrorMessages({
+      name: [
+       'name must be shorter than or equal to 150 characters'
+      ]
+    })    
   })
 
   it('valid cases for fields', () => {
